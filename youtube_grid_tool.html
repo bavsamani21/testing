@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Grid Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background-color: #e50914;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube Grid Generator</h1>
+  <textarea id="videoLinks" placeholder="Paste YouTube links (one per line)"></textarea>
+  <button onclick="generateGrid()">Generate Grid</button>
+  <div class="grid" id="videoGrid"></div>
+
+  <script>
+    function generateGrid() {
+      const input = document.getElementById('videoLinks').value;
+      const links = input.split('\n').filter(Boolean);
+      const grid = document.getElementById('videoGrid');
+      grid.innerHTML = '';
+
+      links.forEach(link => {
+        const videoId = extractYouTubeID(link);
+        if (videoId) {
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          iframe.allowFullscreen = true;
+          grid.appendChild(iframe);
+        }
+      });
+    }
+
+    function extractYouTubeID(url) {
+      const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^\s&]+)/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+  </script>
+</body>
+</html>
